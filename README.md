@@ -79,6 +79,20 @@ Utilising your data manipulation skills, you will need to design some utility fu
 
 **Some advice: don't write all the utility functions in one go, write them when you need them in your seed**
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ---
 
 ## Step 3 - Building Endpoints
