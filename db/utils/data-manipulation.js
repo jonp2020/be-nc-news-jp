@@ -6,11 +6,8 @@ const { articlesWithAdaptedTimeStamp } = (exports.createTimeStamp = (data) => {
     const newArticle = { ...article };
     const timeInMili = newArticle.created_at;
     const newTime = new Date(timeInMili);
-    const humanDateFormat = newTime.toLocaleDateString();
-    // console.log("date", humanDateFormat);
-    const humanTimeFormat = newTime.toLocaleTimeString();
     delete newArticle.created_at;
-    newArticle.created_at = humanDateFormat + " " + humanTimeFormat;
+    newArticle.created_at = newTime;
     return newArticle;
   });
   // console.log(unixToTime);
@@ -24,23 +21,21 @@ exports.changeComments = (comments, articles) => {
     delete formattedComment.created_by;
     return formattedComment;
   });
-  console.log(newComment);
-  return newComment;
+  const organisedComments = newComment.map((comment)=> {
+    const updatedComment = {...comment};
+    
+    const article = articles.find((article)=> {
+
+      if(updatedComment.belongs_to === article.title){
+        return true;
+      }
+
+    })
+    updatedComment.article_id = article.article_id;
+    delete updatedComment.belongs_to
+    return updatedComment
+    
+  })
+  return organisedComments;
 };
 
-// {
-// 	comment_id: 1,
-// 	created_by: "butter_bridge",
-// 	votes: 16,
-// 	belongs_to: "They're not exactly dogs, are they?",
-// 	created_at: "11/15/2018 12:21:54 PM",
-// 	body:
-// 		"Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
-// },
-
-// - `comment_id` which is the primary key
-// - `author` field that references a user's primary key (username)
-// - `article_id` field that references an article's primary key
-// - `votes` defaults to 0
-// - `created_at` defaults to the current timestamp
-// - `body`

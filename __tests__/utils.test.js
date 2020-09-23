@@ -35,7 +35,7 @@ describe("createTimeStamp", () => {
         topic: "mitch",
         author: "butter_bridge",
         body: "I find this existence challenging",
-        created_at: "11/15/2018 12:21:54 PM",
+        created_at: new Date('2018-11-15T12:21:54.171Z'),
         votes: 100,
       },
     ]);
@@ -56,12 +56,12 @@ describe("createTimeStamp", () => {
   });
 });
 
-describe.only("changeComments", () => {
+describe("changeComments", () => {
   it("returns an array with an object", () => {
     const testArticle = [
       {
         article_id: 1,
-        title: "Living in the shadow of a great man",
+        title: "They're not exactly dogs, are they?",
         body: "I find this existence challenging",
         votes: 100,
         topic: "mitch",
@@ -120,6 +120,69 @@ describe.only("changeComments", () => {
       },
     ]);
   });
+  it ('updates keys pof multiple comments keys', ()=> {
+    const testArticle = [
+      {
+        article_id: 1,
+        title: "They're not exactly dogs, are they?",
+        body: "I find this existence challenging",
+        votes: 100,
+        topic: "mitch",
+        author: "butter_bridge",
+        created_at: "11/15/2018 12:21:54 PM",
+      },
+      {
+        article_id: 3,
+        title: 'Eight pug gifs that remind me of mitch',
+        body: 'some gifs',
+        votes: 0,
+        topic: 'mitch',
+        author: 'icellusedkars',
+        created_at: Date('2010-11-17T12:21:54.171Z')
+      }
+
+      
+    ];
+    const testComments = [
+      {
+        comment_id: 1,
+        created_by: "butter_bridge",
+        votes: 16,
+        belongs_to: "They're not exactly dogs, are they?",
+        created_at: "11/15/2018 12:21:54 PM",
+        body:
+          "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+      },
+
+      {
+        comment_id: 2,
+        created_by: "icellusedkars",
+        votes: 0,
+        belongs_to: "Eight pug gifs that remind me of mitch",
+        created_at: "11/15/2018 12:21:54 PM",
+        body:
+          "some gifs!",
+      }
+    ]
+    expect(changeComments(testComments, testArticle)).toEqual([
+      {
+        comment_id: 1,
+        author: "butter_bridge",
+        article_id: 1,
+        votes: 16,
+        created_at: "11/15/2018 12:21:54 PM",
+        body:
+          "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+      },{
+      comment_id: 2,
+      author: "icellusedkars",
+      article_id: 3,
+      votes: 0,
+      created_at: "11/15/2018 12:21:54 PM",
+      body:
+        "some gifs!"
+    }])
+  })
 });
 
 // - `comment_id` which is the primary key

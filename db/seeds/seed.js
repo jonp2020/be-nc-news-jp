@@ -37,9 +37,9 @@ exports.seed = function (knex) {
       const commentsWithAdaptedTimeStamp = createTimeStamp(commentData);
       console.log("articles: ", articles[0]);
       // console.log("art: ", articles);
-      const formattedComments = changeComments(dataComments, articles);
+      const formattedComments = changeComments(commentsWithAdaptedTimeStamp, articles);
       return knex
-        .insert(commentsWithAdaptedTimeStamp)
+        .insert(formattedComments)
         .into("comments")
         .returning("*");
     })
