@@ -1,4 +1,5 @@
-exports.handleInvalidPath = (err, req, res, next) => {
+exports.handleInvalidPath = (req, res, next) => {
+
     res.status(404).send({msg:'path not found'})
 }
 
