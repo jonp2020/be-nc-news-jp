@@ -79,20 +79,6 @@ Utilising your data manipulation skills, you will need to design some utility fu
 
 **Some advice: don't write all the utility functions in one go, write them when you need them in your seed**
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ---
 
 ## Step 3 - Building Endpoints
@@ -113,31 +99,31 @@ You will work through the first endpoint in your pair and then diverge for the r
 _details for each endpoint are provided below_
 
 ```http
-GET /api/topics
+GET /api/topics ----### DONE
 
 >>> Time to go solo! <<<
 
-GET /api/users/:username
+GET /api/users/:username ----### DONE
 
 DELETE /api/articles/:article_id
 PATCH /api/articles/:article_id
-GET /api/articles/:article_id
+GET /api/articles/:article_id ----### DONE
 
 POST /api/articles/:article_id/comments
 GET /api/articles/:article_id/comments
 
-GET /api/articles
+GET /api/articles ----### DONE
 POST /api/articles
 
 PATCH /api/comments/:comment_id
 DELETE /api/comments/:comment_id
 
-GET /api
+GET /api ----### DONE
 
 DELETE /api/articles/:article_id
 POST /api/topics
 POST /api/users
-GET /api/users
+GET /api/users  ----### DONE
 ```
 
 ---
@@ -191,8 +177,8 @@ GET /api/users/:username
   - `name`
 
 ---
-**Please now bid farewell to your pair and continue on this sprint working solo. Ensure that you fork your partner's repo so you don't run into merge conflicts.**
 
+**Please now bid farewell to your pair and continue on this sprint working solo. Ensure that you fork your partner's repo so you don't run into merge conflicts.**
 
 ```http
 GET /api/articles/:article_id
@@ -350,7 +336,6 @@ GET /api
 Make sure your application and your database is hosted using Heroku
 
 See the hosting.md file in this repo for more guidance
-
 
 #### Pagination
 

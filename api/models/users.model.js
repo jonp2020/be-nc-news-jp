@@ -1,4 +1,4 @@
-const knex = require("../../db/seeds/connection");
+const knex = require("../../db/connection");
 
 exports.fetchUsers = () => {
   return knex.select("*").from("users");
