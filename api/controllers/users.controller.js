@@ -1,4 +1,8 @@
-const { fetchUsers, fetchUserByUsername } = require("../models/users.model");
+const {
+  fetchUsers,
+  fetchUserByUsername,
+  insertUser,
+} = require("../models/users.model");
 
 exports.getUsers = (req, res, next) => {
   fetchUsers()
@@ -22,6 +26,17 @@ exports.getUserByUserName = (req, res, next) => {
     })
     .catch((err) => {
       // console.log("this is the error controller");
+      next(err);
+    });
+};
+
+exports.postUser = (req, res, next) => {
+  const user = req.body;
+  insertUser(user)
+    .then(([user]) => {
+      res.status(201).send({ user });
+    })
+    .catch((err) => {
       next(err);
     });
 };

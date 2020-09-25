@@ -7,3 +7,7 @@ exports.fetchUsers = () => {
 exports.fetchUserByUsername = (username) => {
   return knex("users").where("username", username);
 };
+
+exports.insertUser = (user) => {
+  return knex("users").insert(user).returning("*");
+};
