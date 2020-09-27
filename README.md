@@ -110,7 +110,7 @@ PATCH /api/articles/:article_id
 GET /api/articles/:article_id ----### DONE
 
 POST /api/articles/:article_id/comments
-GET /api/articles/:article_id/comments
+GET /api/articles/:article_id/comments   ----### DONE
 
 GET /api/articles ----### DONE
 POST /api/articles
@@ -121,8 +121,8 @@ DELETE /api/comments/:comment_id
 GET /api ----### DONE
 
 DELETE /api/articles/:article_id
-POST /api/topics
-POST /api/users
+POST /api/topics ----### DONE
+POST /api/users ----### DONE
 GET /api/users  ----### DONE
 ```
 

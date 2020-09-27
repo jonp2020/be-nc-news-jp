@@ -1,15 +1,55 @@
 const knex = require("../../db/connection");
 
 exports.fetchArticles = () => {
-  return knex.select("*").from("articles");
+  return knex
+    .select(
+      "articles.article_id",
+      "articles.title",
+      "articles.body",
+      "articles.votes",
+      "articles.topic",
+      "articles.author",
+      "articles.created_at"
+    )
+    .from("articles")
+    .count("comments AS comment_count")
+    .leftJoin("comments", "comments.article_id", "articles.article_id")
+    .groupBy("articles.article_id");
 };
 
 exports.fetchArticlesById = (articleId) => {
-  return knex("articles").where("article_id", articleId);
+  return knex
+    .select(
+      "articles.article_id",
+      "articles.title",
+      "articles.body",
+      "articles.votes",
+      "articles.topic",
+      "articles.author",
+      "articles.created_at"
+    )
+    .from("articles")
+    .where("articles.article_id", articleId)
+    .count("comments AS comment_count")
+    .leftJoin("comments", "comments.article_id", "articles.article_id")
+    .groupBy("articles.article_id");
 };
 
 exports.fetchArticleComments = (articleId) => {
-  // console.log("fetchComments: ", article);
   return knex("comments").where("article_id", articleId);
-  // .where("article_id", article.article_id);
+};
+
+exports.insertArticle = (article) => {
+  return knex("articles").insert(article).returning("*");
+};
+
+exports.insertComment = (comment) => {
+  return knex("comments").insert(comment).returning("*");
+};
+
+exports.updateArticleVotes = (articleId, numOfVotes) => {
+  return knex("articles")
+    .where("article_id", articleId)
+    .increment("votes", numOfVotes)
+    .returning("*");
 };

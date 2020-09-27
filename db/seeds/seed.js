@@ -14,6 +14,7 @@ exports.seed = function (knex) {
   return knex.migrate
     .rollback()
     .then(() => {
+      // console.log("re-seeding");
       return knex.migrate.latest();
     })
     .then(() => {
@@ -35,13 +36,12 @@ exports.seed = function (knex) {
     })
     .then((articles) => {
       const commentsWithAdaptedTimeStamp = createTimeStamp(commentData);
-      console.log("articles: ", articles[0]);
       // console.log("art: ", articles);
-      const formattedComments = changeComments(commentsWithAdaptedTimeStamp, articles);
-      return knex
-        .insert(formattedComments)
-        .into("comments")
-        .returning("*");
+      const formattedComments = changeComments(
+        commentsWithAdaptedTimeStamp,
+        articles
+      );
+      return knex.insert(formattedComments).into("comments").returning("*");
     })
     .catch((err) => {
       console.log(err);

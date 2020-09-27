@@ -2,15 +2,15 @@ const request = require("supertest");
 const app = require("../api/app.js");
 const connection = require("../db/connection");
 
-beforeEach = () => {
-  return connection.seed.run();
-};
-
-afterAll = () => {
-  return connection.destroy();
-};
-
 describe("app", () => {
+  beforeEach(() => {
+    return connection.seed.run();
+  });
+
+  afterAll(() => {
+    return connection.destroy();
+  });
+
   describe("/api", () => {
     describe("/topics", () => {
       describe("GET /topics", () => {
@@ -67,7 +67,7 @@ describe("app", () => {
             })
             .expect(400);
         });
-        it("400: POST responds with status 400 for post requests for duplicat items", () => {
+        it("400: POST responds with status 400 for post requests for duplicate items", () => {
           return request(app)
             .post("/api/topics")
             .send({ slug: "cats", description: "Not dogs" })
@@ -116,7 +116,7 @@ describe("app", () => {
         });
     });
   });
-  describe.only("POST /users", () => {
+  describe("POST /users", () => {
     it("201: POST responds with a 201 status", () => {
       return request(app)
         .post("/api/users")
@@ -153,8 +153,20 @@ describe("app", () => {
         })
         .expect(400);
     });
+    it("400: POST responds with status 400 for post requests for duplicate usernames", () => {
+      return request(app)
+        .post("/api/users")
+        .send({
+          username: "butter_bridge",
+          avatar_url:
+            "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg",
+          name: "jonny",
+        })
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("The item you requested to post already exists.");
+        });
+    });
   });
-
   describe("GET /articles", () => {
     it("200: returns a GET request with articles", () => {
       return request(app)
@@ -187,8 +199,19 @@ describe("app", () => {
                 topic: "mitch",
                 author: "icellusedkars",
                 created_at: "2010-11-17T12:21:54.171Z",
+                comment_count: "0",
               },
             ]);
+          });
+      });
+      it("400: returns status 400 for GET request with invalid article id", () => {
+        return request(app)
+          .get("/api/articles/dog")
+          .expect(400)
+          .then(({ body: { msg } }) => {
+            expect(msg).toBe(
+              "Invalid article id. Please try again using a valid article id number."
+            );
           });
       });
       it("404: returns an status of 404 for GET requests for article ids that do not currently exist", () => {
@@ -217,6 +240,187 @@ describe("app", () => {
             .then(({ body: { msg } }) => {
               expect(msg).toBe(
                 "There are no comments for this article yet. Be the first to add your comments!"
+              );
+            });
+        });
+        describe("POST /articles/:article_id/comments", () => {
+          it("201: POST request returns status 201", () => {
+            return request(app)
+              .post("/api/articles/9/comments")
+              .send({
+                author: "butter_bridge",
+                article_id: 9,
+                votes: 2,
+                created_at: "2020-09-15 10:23:53.1",
+                body: "That sounds great!",
+              })
+              .expect(201);
+          });
+          it("201: POST request responds with a new comment", () => {
+            return request(app)
+              .post("/api/articles/9/comments")
+              .send({
+                author: "butter_bridge",
+                article_id: 9,
+                votes: 3,
+                created_at: "2020-09-16 10:23:53.1",
+                body: "Thanks",
+              })
+              .then(({ body }) => {
+                expect(Object.keys(body.comment)).toEqual(
+                  expect.arrayContaining([
+                    "comment_id",
+                    "author",
+                    "created_at",
+                    "votes",
+                    "body",
+                  ])
+                );
+              });
+          });
+        });
+      });
+      describe("POST /articles", () => {
+        it("201: POST responds with a 201 status", () => {
+          return request(app)
+            .post("/api/articles")
+            .send({
+              // article_id:
+              title: "Video of cat singing",
+              body: "Here's a great vid of a cat belting out some tunes",
+              votes: 0,
+              topic: "cats",
+              author: "rogersop",
+              created_at: "2002-11-19 12:21:54.1",
+            })
+            .expect(201);
+        });
+        it("201: POST responds with a new article", () => {
+          const testArticleToPost = {
+            title: "Video of cats dancing",
+            body: "Here's a great vid of a cat belting out some tunes",
+            votes: 0,
+            topic: "cats",
+            author: "rogersop",
+            created_at: "2003-11-15 10:23:53.1",
+          };
+          return request(app)
+            .post("/api/articles")
+            .send(testArticleToPost)
+            .then(({ body }) => {
+              expect(body.article).toEqual({
+                article_id: 13,
+                author: "rogersop",
+                body: "Here's a great vid of a cat belting out some tunes",
+                created_at: "2003-11-15T10:23:53.100Z",
+                title: "Video of cats dancing",
+                topic: "cats",
+                votes: 0,
+              });
+            });
+        });
+        it("400: POST responds with status 400 for post request with incorrect keys", () => {
+          return request(app)
+            .post("/api/articles")
+            .send({
+              tite: "Video of cats eating",
+              bodie:
+                "Here's a great vid of a cat tucking into a Sainbury's chocolate fish pudding",
+              vottes: 0,
+              topix: "cats",
+              auther: "rogersop",
+              craeted_at: "2003-11-14 11:23:53.1",
+            })
+            .expect(400);
+        });
+        it("400: POST responds with status 400 for requests to post duplicate entries", () => {
+          return request(app)
+            .post("/api/articles")
+            .send({
+              article_id: 3,
+              title: "Eight pug gifs that remind me of mitch",
+              body: "some gifs",
+              votes: 0,
+              topic: "mitch",
+              author: "icellusedkars",
+              created_at: "2010-11-17T12:21:54.171Z",
+            })
+            .then(({ body: { msg } }) => {
+              console.log("test -msg -------", msg);
+              expect(msg).toBe(
+                "The item you requested to post already exists."
+              );
+            });
+        });
+      });
+      describe("201: PATCH /articles/:article_id", () => {
+        it("201: responds with 201 status for patch request", () => {
+          return request(app)
+            .patch("/api/articles/3")
+            .send({ inc_votes: 1 })
+            .expect(201);
+        });
+        it("201: responds with an updated article object", () => {
+          return request(app)
+            .patch("/api/articles/5")
+            .send({ inc_votes: 7 })
+            .expect(201)
+            .then(({ body }) => {
+              expect(body.article).toEqual({
+                article_id: 5,
+                title: "UNCOVERED: catspiracy to bring down democracy",
+                body: "Bastet walks amongst us, and the cats are taking arms!",
+                votes: 7,
+                topic: "cats",
+                author: "rogersop",
+                created_at: "2002-11-19T12:21:54.171Z",
+              });
+            });
+        });
+        it("404: returns 404 status following PATCH request with invalid key", () => {
+          return request(app)
+            .patch("/api/articles/1")
+            .send({ inc_votez: 7 })
+            .expect(404)
+            .then(({ body: { msg } }) => {
+              expect(msg).toBe(
+                "Could not update. Please check the spelling of the key fields."
+              );
+            });
+        });
+      });
+      describe("PATCH /api/comments/:comment_id", () => {
+        it("201: responds with 201 status when updating comment votes", () => {
+          return request(app)
+            .patch("/api/comments/1")
+            .send({ inc_votes: 1 })
+            .expect(201);
+        });
+        it("201: PATCH status 201 responds with updated comment", () => {
+          return request(app)
+            .patch("/api/comments/1")
+            .send({ inc_votes: 6 })
+            .expect(201)
+            .then(({ body }) => {
+              expect(body.comment).toEqual({
+                comment_id: 1,
+                author: "butter_bridge",
+                article_id: 9,
+                votes: 22,
+                created_at: "2017-11-22T12:36:03.389Z",
+                body:
+                  "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+              });
+            });
+        });
+        it("404: PATCH responds with 404 status when given invalid key", () => {
+          return request(app)
+            .patch("/api/comments/1")
+            .send({ include_votes: 1 })
+            .expect(404)
+            .then(({ body: { msg } }) => {
+              expect(msg).toBe(
+                "Could not update. Please check the spelling of the key fields."
               );
             });
         });
