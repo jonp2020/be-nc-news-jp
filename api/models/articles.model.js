@@ -53,3 +53,17 @@ exports.updateArticleVotes = (articleId, numOfVotes) => {
     .increment("votes", numOfVotes)
     .returning("*");
 };
+
+exports.deleteArticleById = (articleId) => {
+  return knex("articles")
+    .where("article_id", articleId)
+    .del()
+    .then((delCount) => {
+      if (delCount === 0) {
+        return Promise.reject({
+          status: 404,
+          msg: "Article not found.",
+        });
+      }
+    });
+};

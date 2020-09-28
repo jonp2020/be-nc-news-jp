@@ -1,7 +1,7 @@
 // EHMF
 
 exports.handle400s = (err, req, res, next) => {
-  // console.log("here in 400 errors");
+  // console.log("here in 400 errors", err);
   // console.log("err -----", err);
   if (err.code === "42703") {
     res.status(400).send({ msg: "Bad request" });
@@ -19,7 +19,7 @@ exports.handle400s = (err, req, res, next) => {
 
 exports.handleInvalidPath = (req, res, next) => {
   // console.log("invalid path ");
-  // console.log("inside error invalid path");
+  console.log("inside error invalid path");
   res.status(404).send({ msg: "path not found" });
 };
 

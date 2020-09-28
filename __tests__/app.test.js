@@ -389,13 +389,28 @@ describe("app", () => {
             });
         });
       });
+      describe("DELETE /api/articles/:article_id", () => {
+        it("204: returns status 204 for successful DELETE of an article by its id", () => {
+          return request(app).delete("/api/articles/1").expect(204);
+        });
+        it("404: DELETE request for non-existent article id responds with 404", () => {
+          return request(app)
+            .delete("/api/articles/100")
+            .expect(404)
+            .then(({ body: { msg } }) => {
+              expect(msg).toBe("Article not found.");
+            });
+        });
+      });
+
       describe("PATCH /api/comments/:comment_id", () => {
-        it("201: responds with 201 status when updating comment votes", () => {
+        it("201: PATCH responds with 201 status when updating comment votes", () => {
           return request(app)
             .patch("/api/comments/1")
             .send({ inc_votes: 1 })
             .expect(201);
         });
+
         it("201: PATCH status 201 responds with updated comment", () => {
           return request(app)
             .patch("/api/comments/1")
@@ -422,6 +437,19 @@ describe("app", () => {
               expect(msg).toBe(
                 "Could not update. Please check the spelling of the key fields."
               );
+            });
+        });
+      });
+      describe("DELETE /api/comments/:comment_id", () => {
+        it("204: returns status 204 for successful DELETE of a comment by its id", () => {
+          return request(app).delete("/api/comments/1").expect(204);
+        });
+        it("404: DELETE request for non-existent comment id number returns 404 status", () => {
+          return request(app)
+            .delete("/api/comments/101")
+            .expect(404)
+            .then(({ body: { msg } }) => {
+              expect(msg).toBe("Comment not found.");
             });
         });
       });

@@ -5,6 +5,7 @@ const {
   insertArticle,
   insertComment,
   updateArticleVotes,
+  deleteArticleById,
 } = require("../models/articles.model");
 
 exports.getArticles = (req, res, next) => {
@@ -105,7 +106,17 @@ exports.patchArticle = (req, res, next) => {
       });
     })
     .catch((err) => {
-      console.log("patch err----- ", err);
+      next(err);
+    });
+};
+
+exports.deleteArticle = (req, res, next) => {
+  const articleId = req.params.article_id;
+  deleteArticleById(articleId)
+    .then(() => {
+      res.status(204).send();
+    })
+    .catch((err) => {
       next(err);
     });
 };

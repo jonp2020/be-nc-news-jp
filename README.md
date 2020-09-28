@@ -105,22 +105,22 @@ GET /api/topics ----### DONE
 
 GET /api/users/:username ----### DONE
 
-DELETE /api/articles/:article_id
-PATCH /api/articles/:article_id
+DELETE /api/articles/:article_id ----### DONE
+PATCH /api/articles/:article_id ----### DONE
 GET /api/articles/:article_id ----### DONE
 
-POST /api/articles/:article_id/comments
+POST /api/articles/:article_id/comments ----### DONE
 GET /api/articles/:article_id/comments   ----### DONE
 
 GET /api/articles ----### DONE
-POST /api/articles
+POST /api/articles ----### DONE
 
-PATCH /api/comments/:comment_id
-DELETE /api/comments/:comment_id
+PATCH /api/comments/:comment_id ----### DONE
+DELETE /api/comments/:comment_id ----### DONE
 
 GET /api ----### DONE
 
-DELETE /api/articles/:article_id
+DELETE /api/articles/:article_id ----### DONE
 POST /api/topics ----### DONE
 POST /api/users ----### DONE
 GET /api/users  ----### DONE
