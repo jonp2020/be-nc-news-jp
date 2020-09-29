@@ -1,7 +1,9 @@
 // extract any functions you are using to manipulate your data, into this file
 
 const data = require("../data");
-const { articlesWithAdaptedTimeStamp } = (exports.createTimeStamp = (data) => {
+// const { articlesWithAdaptedTimeStamp } = (
+
+exports.createTimeStamp = (data) => {
   const unixToTime = data.map((article) => {
     const newArticle = { ...article };
     const timeInMili = newArticle.created_at;
@@ -10,9 +12,8 @@ const { articlesWithAdaptedTimeStamp } = (exports.createTimeStamp = (data) => {
     newArticle.created_at = newTime;
     return newArticle;
   });
-  // console.log(unixToTime);
   return unixToTime;
-});
+};
 
 exports.changeComments = (comments, articles) => {
   const newComment = comments.map((comment) => {
@@ -21,21 +22,17 @@ exports.changeComments = (comments, articles) => {
     delete formattedComment.created_by;
     return formattedComment;
   });
-  const organisedComments = newComment.map((comment)=> {
-    const updatedComment = {...comment};
-    
-    const article = articles.find((article)=> {
+  const organisedComments = newComment.map((comment) => {
+    const updatedComment = { ...comment };
 
-      if(updatedComment.belongs_to === article.title){
+    const article = articles.find((article) => {
+      if (updatedComment.belongs_to === article.title) {
         return true;
       }
-
-    })
+    });
     updatedComment.article_id = article.article_id;
-    delete updatedComment.belongs_to
-    return updatedComment
-    
-  })
+    delete updatedComment.belongs_to;
+    return updatedComment;
+  });
   return organisedComments;
 };
-

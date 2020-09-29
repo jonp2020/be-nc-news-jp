@@ -1,5 +1,6 @@
 const request = require("supertest");
 const app = require("../api/app.js");
+const { get } = require("../api/Router/api.router.js");
 const connection = require("../db/connection");
 
 describe("app", () => {
@@ -184,6 +185,40 @@ describe("app", () => {
           expect(msg).toBe("path not found");
         });
     });
+    it("200: accepts sort_by queries defaulted to created_at", () => {
+      return request(app)
+        .get("/api/articles?sort_by=created_at")
+        .expect(200)
+        .then((res) => {
+          expect(res.body.articles).toBeSortedBy("created_at", {
+            descending: true,
+          });
+        });
+    });
+    it("200: accepts order queries", () => {
+      return request(app)
+        .get("/api/articles?order=asc")
+        .expect(200)
+        .then((res) => {
+          expect(res.body.articles).toBeSortedBy("created_at");
+        });
+    });
+    it("200: filters the results of articles by author", () => {
+      return request(app)
+        .get("/api/articles?author=butter_bridge")
+        .expect(200)
+        .then(({ body: { articles } }) => {
+          expect(articles[0].author).toBe("butter_bridge");
+        });
+    });
+    it("200: filters the results of articles by topic", () => {
+      return request(app)
+        .get("/api/articles?topic=cats")
+        .expect(200)
+        .then(({ body: { articles } }) => {
+          expect(articles[0].topic).toBe("cats");
+        });
+    });
     describe("GET /articles/:article_id", () => {
       it("200: returns a GET request for an article by its id", () => {
         return request(app)
@@ -231,6 +266,42 @@ describe("app", () => {
             .expect(200)
             .then((res) => {
               expect(res.body.comments).toEqual(expect.any(Array));
+            });
+        });
+        it("200: returns comments in order of created_at by default", () => {
+          return request(app)
+            .get("/api/articles/9/comments")
+            .expect(200)
+            .then((res) => {
+              expect(res.body.comments).toBeSortedBy("created_at", {
+                descending: true,
+              });
+            });
+        });
+        it("200: returns comments sorted by column specified by user", () => {
+          return request(app)
+            .get("/api/articles/9/comments?sort_by=votes")
+            .expect(200)
+            .then((res) => {
+              expect(res.body.comments).toBeSortedBy("votes", {
+                descending: true,
+              });
+            });
+        });
+        it("200: returns comments in ascending order", () => {
+          return request(app)
+            .get("/api/articles/9/comments?order=asc")
+            .expect(200)
+            .then((res) => {
+              expect(res.body.comments).toBeSortedBy("created_at");
+            });
+        });
+        it("200: returns comments sorted by order and column specified by user", () => {
+          return request(app)
+            .get("/api/articles/9/comments?sort_by=votes&order=asc")
+            .expect(200)
+            .then((res) => {
+              expect(res.body.comments).toBeSortedBy("votes");
             });
         });
         it("404: returns a 404 status and message if an article has no comments", () => {
@@ -346,7 +417,6 @@ describe("app", () => {
               created_at: "2010-11-17T12:21:54.171Z",
             })
             .then(({ body: { msg } }) => {
-              console.log("test -msg -------", msg);
               expect(msg).toBe(
                 "The item you requested to post already exists."
               );

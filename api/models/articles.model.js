@@ -1,6 +1,12 @@
+const { leftOuterJoin } = require("../../db/connection");
 const knex = require("../../db/connection");
 
-exports.fetchArticles = () => {
+exports.fetchArticles = (
+  sort_by = "created_at",
+  order = "desc",
+  author,
+  topic
+) => {
   return knex
     .select(
       "articles.article_id",
@@ -12,9 +18,14 @@ exports.fetchArticles = () => {
       "articles.created_at"
     )
     .from("articles")
+    .modify((query) => {
+      if (author) query.where("articles.author", author);
+      if (topic) query.where("articles.topic", topic);
+    })
     .count("comments AS comment_count")
     .leftJoin("comments", "comments.article_id", "articles.article_id")
-    .groupBy("articles.article_id");
+    .groupBy("articles.article_id")
+    .orderBy(sort_by, order);
 };
 
 exports.fetchArticlesById = (articleId) => {
@@ -35,8 +46,14 @@ exports.fetchArticlesById = (articleId) => {
     .groupBy("articles.article_id");
 };
 
-exports.fetchArticleComments = (articleId) => {
-  return knex("comments").where("article_id", articleId);
+exports.fetchArticleComments = (
+  articleId,
+  sort_by = "created_at",
+  order = "desc"
+) => {
+  return knex("comments")
+    .where("article_id", articleId)
+    .orderBy(sort_by, order);
 };
 
 exports.insertArticle = (article) => {

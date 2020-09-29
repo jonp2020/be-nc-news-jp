@@ -24,11 +24,7 @@ exports.seed = function (knex) {
       return knex("users").insert(userData).returning("*");
     })
     .then((users) => {
-      // console.log("users: ", users[0]);
       const articlesWithAdaptedTimeStamp = createTimeStamp(articleData);
-      // const articlesWithDefaultVotes = createDefaultVotes(
-      //   articlesWithAdaptedTimeStamp
-      // );
       return knex
         .insert(articlesWithAdaptedTimeStamp)
         .into("articles")
@@ -36,7 +32,6 @@ exports.seed = function (knex) {
     })
     .then((articles) => {
       const commentsWithAdaptedTimeStamp = createTimeStamp(commentData);
-      // console.log("art: ", articles);
       const formattedComments = changeComments(
         commentsWithAdaptedTimeStamp,
         articles

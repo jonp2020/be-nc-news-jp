@@ -11,7 +11,7 @@ exports.up = function (knex) {
       .onDelete("CASCADE");
     commentsTable.integer("votes").notNull().defaultTo(0);
     commentsTable.timestamp("created_at");
-    commentsTable.string("body");
+    commentsTable.text("body");
   });
 };
 

@@ -9,9 +9,13 @@ const {
 } = require("../models/articles.model");
 
 exports.getArticles = (req, res, next) => {
-  fetchArticles()
+  const { sort_by } = req.query;
+  const { order } = req.query;
+  const { author } = req.query;
+  const { topic } = req.query;
+
+  fetchArticles(sort_by, order, author, topic)
     .then((articles) => {
-      console.log("articles: --------", articles);
       res.status(200).send({ articles });
     })
     .catch(next);
@@ -22,9 +26,7 @@ exports.getArticlesById = (req, res, next) => {
 
   fetchArticlesById(articleId)
     .then((article) => {
-      // console.log("article---", article);
       if (article.length === 0) {
-        console.log("inside promise reject if statement");
         return Promise.reject({
           status: 404,
           msg:
@@ -34,14 +36,16 @@ exports.getArticlesById = (req, res, next) => {
       res.status(200).send({ article });
     })
     .catch((err) => {
-      console.log("inside fetch article by id catch block");
       next(err);
     });
 };
 
 exports.getCommentsByArticleId = (req, res, next) => {
   const articleId = req.params.article_id;
-  fetchArticleComments(articleId)
+  const { sort_by } = req.query;
+  const { order } = req.query;
+
+  fetchArticleComments(articleId, sort_by, order)
     .then((comments) => {
       if (comments.length === 0) {
         return Promise.reject({
@@ -70,14 +74,12 @@ exports.postArticle = (req, res, next) => {
 
 exports.postComments = (req, res, next) => {
   const comment = req.body;
-  // console.log("post comments-----", comment);
 
   insertComment(comment)
     .then(([comment]) => {
       res.status(201).send({ comment });
     })
     .catch((err) => {
-      console.log("post comments err:----", err);
       next(err);
     });
 };
@@ -101,7 +103,6 @@ exports.patchArticle = (req, res, next) => {
         });
       }
       updateArticleVotes(articleId, numOfVotes).then(([article]) => {
-        console.log("patch article-----", article);
         res.status(201).send({ article });
       });
     })

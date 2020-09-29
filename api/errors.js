@@ -2,7 +2,6 @@
 
 exports.handle400s = (err, req, res, next) => {
   // console.log("here in 400 errors", err);
-  // console.log("err -----", err);
   if (err.code === "42703") {
     res.status(400).send({ msg: "Bad request" });
   } else if (err.code === "23505") {

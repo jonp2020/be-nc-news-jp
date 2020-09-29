@@ -25,7 +25,6 @@ exports.getUserByUserName = (req, res, next) => {
       res.status(200).send({ user });
     })
     .catch((err) => {
-      // console.log("this is the error controller");
       next(err);
     });
 };
@@ -37,7 +36,6 @@ exports.postUser = (req, res, next) => {
       res.status(201).send({ user });
     })
     .catch((err) => {
-      console.log(err);
       next(err);
     });
 };

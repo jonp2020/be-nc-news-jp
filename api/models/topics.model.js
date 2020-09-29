@@ -5,6 +5,5 @@ exports.fetchTopics = () => {
 };
 
 exports.insertTopic = (topic) => {
-  // console.log("model topic: -----", topic);
   return knex("topics").insert(topic).returning("*");
 };
