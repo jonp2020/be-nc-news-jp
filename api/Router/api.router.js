@@ -6,9 +6,8 @@ const commentsRouter = require("./comments.router");
 const fs = require("fs");
 
 apiRouter.route("/").get((req, res, next) => {
-  // const apiContent = [];
   return fs.promises
-    .readFile("../endpoints.json", "utf8")
+    .readFile("./endpoints.json", "utf8")
     .then((apiContent) => {
       console.log("content--- ", apiContent);
       res.status(200).send(apiContent);

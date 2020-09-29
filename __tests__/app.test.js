@@ -13,6 +13,9 @@ describe("app", () => {
   });
 
   describe("/api", () => {
+    // it("200: responds with json file showing endpoints", () => {
+    //   return request(app).get("/api").expect(200);
+    // });
     describe("/topics", () => {
       describe("GET /topics", () => {
         it("GET request responds with Status:200", () => {
