@@ -6,7 +6,7 @@ A back-end API for a user-generated news style website. Built using RESTful API 
 
 A hosted version on heroku can be found [here](https://nc-news-fe-jonp.herokuapp.com/).
 
-To easily view the data in your browser, I would recommend installing a JSON viewer extension. I am currently using one called JSON Formatter. However, there are several available in the Chrome extension webstore that you can choose from.
+To easily view the data in your browser, I would recommend installing a JSON viewer extension. I am currently using one called JSON Formatter, however, there are several available in the Chrome extension webstore that you can choose from.
 
 The front-end for the project can be found in this repository here on [Github](https://github.com/jonp2020/fe-nc-news-jp.git).
 
