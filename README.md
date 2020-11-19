@@ -33,7 +33,7 @@ You'll need to have the following installed on your machine:
 $ git clone https://github.com/jonp2020/be-nc-news-jp.git
 ```
 
-2. Navigate into the directory and install the required dependencies.
+2. Navigate into the directory and install the required dependencies:
 
 ```
 $ cd be-nc-news-jp
